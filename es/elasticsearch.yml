@@ -1,0 +1,13 @@
+path:
+  data: /es/data
+  logs: /es/log
+  plugins: /es/plugins
+  work: /es/work
+cluster:
+  name: eztwo
+
+script.disable_dynamic: true
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.port: 9242

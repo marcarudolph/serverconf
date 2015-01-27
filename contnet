@@ -1,0 +1,29 @@
+#!/bin/bash
+
+COMMAND=$1
+CONTAINER=$2
+
+if [ $COMMAND == "attach" ]
+then
+  IP=$3
+  HOSTS_FILE=/var/contnet.hosts
+
+  brctl addbr br-cont1
+  ip link set br-cont1 up
+
+  ip link add $CONTAINER-int type veth peer name $CONTAINER-ext
+  brctl addif br-cont1 $CONTAINER-ext
+  pid=$(exec docker inspect --format '{{ .State.Pid }}' "$CONTAINER")
+  ip link set netns $pid dev $CONTAINER-int
+  nsenter -t $pid -n ip link set $CONTAINER-int up
+  nsenter -t $pid -n ip addr add $IP dev $CONTAINER-int
+
+  sed -i "/$CONTAINER=/d" $HOSTS_FILE
+  echo "$CONTAINER=$IP" >>$HOSTS_FILE
+fi
+
+if [ $COMMAND == "ip" ]
+then
+  grep "$CONTAINER=" $HOSTS_FILE | awk '{match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/); ip = substr($0,RSTART,RLENGTH); print ip}'
+fi
+
