@@ -10,6 +10,7 @@ docker run --name $CONTAINER_NAME \
  -v /usr/serverconf/nginx/cfg/:/etc/nginx/conf.d/ \
  -v /usr/serverconf/nginx/html:/var/www/html \
  --add-host="es:$(contnet ip es)" \
+ --add-host="cookie:$(contnet ip cookie)" \
  --add-host="registry:$(contnet ip registry)" \
  -p 80:80 \
  -p 443:443 \
