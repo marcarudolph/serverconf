@@ -2,11 +2,11 @@
 
 COMMAND=$1
 CONTAINER=$2
+HOSTS_FILE=/var/contnet.hosts
 
 if [ $COMMAND == "attach" ]
 then
   IP=$3
-  HOSTS_FILE=/var/contnet.hosts
 
   brctl addbr br-cont1
   ip link set br-cont1 up
