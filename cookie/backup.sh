@@ -1,5 +1,5 @@
 #!/bin/bash
-CONTAINER_NAME=cookiebackup
+CONTAINER_NAME=cbackup
 IMAGE=registry.eztwo.com:5042/cookiebackup
 IP=192.168.42.70/24
 
