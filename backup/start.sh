@@ -10,6 +10,7 @@ docker run \
  --add-host="es:$(contnet ip es)" \
  -v /usr/serverconf/backup/.dropbox_uploader:/cfg/.dropbox_uploader \
  -v /usr/data/cookie/pics:/cookie/pics \
+ -v /usr/data/es/backup/cookie:/cookie/backup \
  -d \
  $IMAGE
 contnet attach $CONTAINER_NAME $IP
