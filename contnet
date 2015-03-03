@@ -10,18 +10,19 @@ then
 
   pid=""
   retrylimit=50
-  while [ "$pid" == "" ] && [[ $retrylimit > 0 ]]
+  while ([ "$pid" == "" ] || [ "$pid" == "0" ]) && [[ $retrylimit > 0 ]]
   do
     sleep 0.1
     retrylimit=$((retrylimit-1))
     pid=$(exec docker inspect --format '{{ .State.Pid }}' "$CONTAINER")
   done
 
-  if [ "$pid" == "" ]
+  if [ "$pid" == "" ] || [ "$pid" == "0" ]
   then
-    echo "container not found; giving up"
+    echo "container '$CONTAINER' not found; giving up"
     exit 1
   fi
+  echo "Got process ID $pid for container '$CONTAINER'"
 
   brctl addbr br-cont1
   ip link set br-cont1 up
