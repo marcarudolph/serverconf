@@ -8,12 +8,26 @@ if [ $COMMAND == "attach" ]
 then
   IP=$3
 
+  pid=""
+  retrylimit=50
+  while [ "$pid" == "" ] && [[ $retrylimit > 0 ]]
+  do
+    sleep 0.1
+    retrylimit=$((retrylimit-1))
+    pid=$(exec docker inspect --format '{{ .State.Pid }}' "$CONTAINER")
+  done
+
+  if [ "$pid" == "" ]
+  then
+    echo "container not found; giving up"
+    exit 1
+  fi
+
   brctl addbr br-cont1
   ip link set br-cont1 up
 
   ip link add $CONTAINER-int type veth peer name $CONTAINER-ext
   brctl addif br-cont1 $CONTAINER-ext
-  pid=$(exec docker inspect --format '{{ .State.Pid }}' "$CONTAINER")
   ip link set netns $pid dev $CONTAINER-int
   nsenter -t $pid -n ip link set $CONTAINER-int up
   nsenter -t $pid -n ip addr add $IP dev $CONTAINER-int
