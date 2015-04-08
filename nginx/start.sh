@@ -9,6 +9,7 @@ docker run --name $CONTAINER_NAME \
  -v /var/log/nginx:/var/log/nginx \
  -v /usr/serverconf/nginx/cfg/:/etc/nginx/conf.d/ \
  -v /usr/serverconf/nginx/html:/var/www/html \
+ -v /usr/data/cookie/pics:/cookie/pics \
  --add-host="es:$(contnet ip es)" \
  --add-host="cookie:$(contnet ip cookie)" \
  --add-host="registry:$(contnet ip registry)" \
