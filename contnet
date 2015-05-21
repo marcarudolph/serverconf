@@ -24,11 +24,15 @@ then
   fi
   echo "Got process ID $pid for container '$CONTAINER'"
 
-  brctl addbr br-cont1
+  [ ! -d /sys/class/net/$BRIDGE ] && {
+    brctl addbr br-cont1
+  }
   ip link set br-cont1 up
 
   ip link add $CONTAINER-int type veth peer name $CONTAINER-ext
   brctl addif br-cont1 $CONTAINER-ext
+
+  ip link set dev $EXTERNALIF up
   ip link set netns $pid dev $CONTAINER-int
   nsenter -t $pid -n ip link set $CONTAINER-int up
   nsenter -t $pid -n ip addr add $IP dev $CONTAINER-int
