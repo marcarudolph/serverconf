@@ -32,7 +32,7 @@ then
   ip link add $CONTAINER-int type veth peer name $CONTAINER-ext
   brctl addif br-cont1 $CONTAINER-ext
 
-  ip link set dev $EXTERNALIF up
+  ip link set dev $CONTAINER-ext up
   ip link set netns $pid dev $CONTAINER-int
   nsenter -t $pid -n ip link set $CONTAINER-int up
   nsenter -t $pid -n ip addr add $IP dev $CONTAINER-int
