@@ -1,6 +1,6 @@
 #!/bin/bash
 CONTAINER_NAME=es
-IMAGE=dockerfile/elasticsearch:latest
+IMAGE=elasticsearch:1.4
 IP=192.168.42.10/24
 
 docker rm -f $CONTAINER_NAME
