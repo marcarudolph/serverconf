@@ -12,7 +12,7 @@ docker run --name $CONTAINER_NAME \
  -v /usr/data/cookie/pics:/cookie/pics \
  --add-host="es:$(contnet ip es)" \
  --add-host="cookie:$(contnet ip cookie)" \
- --add-host="registry:$(contnet ip registry)" \
+ --add-host="registry:$(contnet ip cookie)" \
  -p 80:80 \
  -p 443:443 \
  -p 5042:5042 \
