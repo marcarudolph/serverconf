@@ -9,7 +9,7 @@ docker run \
  --name=$CONTAINER_NAME \
  -e "ES_HEAP_SIZE=128m" \
  -e "ES_JAVA_OPTS=-server" \
- -v /usr/serverconf/es/elasticsearch.yml:/elasticsearch/config/elasticsearch.yml \
+ -v /usr/serverconf/es/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
  -v /usr/data/es:/es \
  -d \
  $IMAGE
