@@ -1,6 +1,6 @@
 #!/bin/bash
 CONTAINER_NAME=nginx
-IMAGE=nginx:1.7.9
+IMAGE=nginx:1.9
 IP=192.168.42.1/24
 
 docker rm -f $CONTAINER_NAME

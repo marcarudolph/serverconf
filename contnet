@@ -24,7 +24,7 @@ then
   fi
   echo "Got process ID $pid for container '$CONTAINER'"
 
-  [ ! -d /sys/class/net/$BRIDGE ] && {
+  [ ! -d /sys/class/net/br-cont1 ] && {
     brctl addbr br-cont1
   }
   ip link set br-cont1 up
