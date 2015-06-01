@@ -1,0 +1,26 @@
+[Unit]
+Description=cookie server
+
+After=docker.service
+Requires=docker.service 
+
+
+[Service]
+TimeoutStartSec=0
+
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+
+ExecStart=/bin/bash -c '\
+  /usr/bin/docker run \
+    --name=%p \
+    --add-host="es:$(/usr/bin/contnet ip es)" \
+    -v /usr/serverconf/backup/.dropbox_uploader:/cfg/.dropbox_uploader \
+    -v /usr/data/cookie/pics:/cookie/pics \
+    -v /usr/data/es/backup/cookie:/cookie/backup \
+    registry.eztwo.com:5042/cookiebackup \
+  '
+
+ExecStartPost=/usr/bin/contnet attach %p 192.168.42.70/24
+
+ExecStop=/usr/bin/docker stop %p
