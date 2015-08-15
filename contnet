@@ -71,6 +71,7 @@ fi
 
 if [ $COMMAND == "ip" ]
 then
+  CONTAINER=$2
   grep "$CONTAINER=" $HOSTS_FILE | awk '{match($0,/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/); ip = substr($0,RSTART,RLENGTH); print ip}'
 fi
 
