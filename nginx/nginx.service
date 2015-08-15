@@ -28,7 +28,7 @@ ExecStart=/bin/bash -c '\
     nginx:1.9 \
   '
 
-ExecStartPost=/usr/bin/contnet attach %p 192.168.42.1/24
+ExecStartPost=/usr/bin/contnet attach %p 192.168.42.1/24 42-BE-EF-42-00-01
 
 ExecStop=/usr/bin/docker stop %p
 

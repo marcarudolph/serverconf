@@ -1,15 +1,18 @@
 #!/bin/bash
 
 COMMAND=$1
-CONTAINER=$2
 HOSTS_FILE=/var/contnet.hosts
+BRIDGE="br-cont1"
 
 if [ $COMMAND == "attach" ]
 then
+  CONTAINER=$2
   IP=$3
+  MAC_ADDRESS=$4
 
   pid=""
   retrylimit=50
+
   while ([ "$pid" == "" ] || [ "$pid" == "0" ]) && [[ $retrylimit > 0 ]]
   do
     sleep 0.1
@@ -24,21 +27,46 @@ then
   fi
   echo "Got process ID $pid for container '$CONTAINER'"
 
-  [ ! -d /sys/class/net/br-cont1 ] && {
-    brctl addbr br-cont1
+  [ ! -d /sys/class/net/$BRIDGE ] && {
+    brctl addbr $BRIDGE
   }
-  ip link set br-cont1 up
+  ip link set dev $BRIDGE up
 
-  ip link add $CONTAINER-int type veth peer name $CONTAINER-ext
-  brctl addif br-cont1 $CONTAINER-ext
+  INTERFACEPREFIX=$(exec docker inspect  --format '{{ .Config.Hostname }}' "$CONTAINER")
+  IF_NR=0
+  while (($IF_NR < 10 ))
+  do
+    INTERNALIF=$INTERFACEPREFIX-i$IF_NR
+    EXTERNALIF=$INTERFACEPREFIX-e$IF_NR
+    IF_EXISTS=`grep "$EXTERNALIF" /proc/net/dev`
+    [ ! -d /sys/class/net/$EXTERNALIF ] && {
+      break
+    }
+    IF_NR=$((IF_NR+1))
+  done
+  echo $EXTERNALIF
 
-  ip link set dev $CONTAINER-ext up
-  ip link set netns $pid dev $CONTAINER-int
-  nsenter -t $pid -n ip link set $CONTAINER-int up
-  nsenter -t $pid -n ip addr add $IP dev $CONTAINER-int
+  if [ -n "$MAC_ADDRESS" ]
+  then
+    FORMATTED_MAC_ADDRESS=$(echo "$MAC_ADDRESS" | sed "s/-/:/g")
+    echo "Explicit MAC address: $FORMATTED_MAC_ADDRESS"
+    ip link add $INTERNALIF address $FORMATTED_MAC_ADDRESS type veth peer name $EXTERNALIF
+  else
+    ip link add $INTERNALIF type veth peer name $EXTERNALIF   
+  fi
+
+  brctl addif $BRIDGE $EXTERNALIF
+  ip link set dev $EXTERNALIF up
+  ip link set netns $pid dev $INTERNALIF
+  nsenter -t $pid -n ip link set $INTERNALIF up
+  nsenter -t $pid -n ip addr add $IP dev $INTERNALIF
 
   sed -i "/$CONTAINER=/d" $HOSTS_FILE
   echo "$CONTAINER=$IP" >>$HOSTS_FILE
+
+  echo "Attached container '$CONTAINER' to bridge $BRIDGE with IP $IP via interface '$EXTERNALIF'"
+
+  exit 0
 fi
 
 if [ $COMMAND == "ip" ]

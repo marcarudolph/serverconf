@@ -21,7 +21,7 @@ ExecStart=/bin/bash -c '\
     registry.eztwo.com:5042/cookieserver \
   '
 
-ExecStartPost=/usr/bin/contnet attach %p 192.168.42.20/24
+ExecStartPost=/usr/bin/contnet attach %p 192.168.42.20/24 42-BE-EF-42-00-20
 
 ExecStop=/usr/bin/docker stop %p
 
