@@ -17,6 +17,7 @@ ExecStart=/bin/bash -c '\
     --add-host="es:$(/usr/bin/contnet ip es)" \
     -e "BASE_URL=http://cookie.eztwo.com" \
     -e "PICTURES_PATH=/cookie/pics" \
+    -e "ES_HOST=es:9242" \
     -v /usr/data/cookie/pics:/cookie/pics \
     registry.eztwo.com:5042/cookieserver \
   '
