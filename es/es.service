@@ -18,7 +18,7 @@ ExecStart=/bin/bash -c '\
     -e "ES_JAVA_OPTS=-server" \
     -v /usr/serverconf/es/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
     -v /usr/data/es:/es \
-    elasticsearch:1.7 \
+    marcarudolph/es \
   '
 
 ExecStartPost=/usr/bin/contnet attach %p 192.168.42.10/24 42-BE-EF-42-00-10
