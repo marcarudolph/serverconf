@@ -1,3 +1,3 @@
 #!/bin/sh
 
-docker build -f ./Dockerfile -t marcarudolph/es
+docker build -f ./Dockerfile -t marcarudolph/es .
