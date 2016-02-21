@@ -3,6 +3,7 @@ path:
   logs: /es/log
   plugins: /es/plugins
   work: /es/work
+  repo: /es/backup
 cluster:
   name: eztwo
 
