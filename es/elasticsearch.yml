@@ -1,7 +1,7 @@
 path:
   data: /es/data
   logs: /es/log
-  plugins: /es/plugins
+  plugins: /usr/share/elasticsearch/plugins/
   work: /es/work
   repo: /es/backup
 cluster:
