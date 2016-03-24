@@ -1,0 +1,31 @@
+[Unit]
+Description=wedding wordpress mysql server
+
+After=docker.service
+Requires=docker.service
+
+
+[Service]
+TimeoutStartSec=0
+
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+
+ExecStart=/bin/bash -c '\
+  /usr/bin/docker run \
+    --name %p \
+    -e "MYSQL_ROOT_PASSWORD=$(cat /srv/db/wp-wedding-mysql/pwd)" \
+    -v /srv/db/wp-wedding-mysql:/var/lib/mysql \
+    mysql:5.7 \
+  '
+ExecStartPost=/usr/bin/contnet attach %p 192.168.42.30/24 42-BE-EF-42-00-30
+
+ExecStop=/usr/bin/docker stop %p
+
+Restart=on-failure
+RestartSec=5s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multiuser.target

@@ -17,10 +17,12 @@ ExecStart=/bin/bash -c '\
     -v /var/log/nginx:/var/log/nginx \
     -v /usr/serverconf/nginx/cfg/:/etc/nginx/conf.d/ \
     -v /usr/serverconf/nginx/html:/var/www/html \
-    -v /usr/data/cookie/pics:/cookie/pics \
+    -v /etc/letsencrypt/:/etc/letsencrypt/ \
+    -v /srv/data/cookie/pics:/cookie/pics \
     --add-host="es:$(contnet ip es)" \
     --add-host="cookie:$(contnet ip cookie)" \
     --add-host="registry:$(contnet ip cookie)" \
+    --add-host="wp-wedding:$(contnet ip wp-wedding)" \
     -p 80:80 \
     -p 443:443 \
     -p 5042:5042 \

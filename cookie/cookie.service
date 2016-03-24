@@ -18,7 +18,7 @@ ExecStart=/bin/bash -c '\
     -e "BASE_URL=http://cookie.eztwo.com" \
     -e "PICTURES_PATH=/cookie/pics" \
     -e "ES_HOST=es:9242" \
-    -v /usr/data/cookie/pics:/cookie/pics \
+    -v /srv/data/cookie/pics:/cookie/pics \
     registry.eztwo.com:5042/cookieserver \
   '
 

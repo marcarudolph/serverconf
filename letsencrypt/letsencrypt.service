@@ -1,0 +1,9 @@
+[Unit]
+Description=Renews letsencrypt certificates  
+After=network.target
+
+[Service]
+Type=oneshot  
+WorkingDirectory=/usr/letsencrypt/  
+ExecStart=/usr/letsencrypt/letsencrypt-auto renew
+ExecStartPost=/usr/bin/killall -HUP nginx
