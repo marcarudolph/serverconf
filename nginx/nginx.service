@@ -25,7 +25,6 @@ ExecStart=/bin/bash -c '\
     --add-host="wp-wedding:$(contnet ip wp-wedding)" \
     -p 80:80 \
     -p 443:443 \
-    -p 5042:5042 \
     -p 9243:9243 \
     nginx:1.9 \
   '

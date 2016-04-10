@@ -1,0 +1,38 @@
+[Unit]
+Description=docker registry
+
+After=docker.service
+Requires=docker.service 
+
+
+[Service]
+TimeoutStartSec=0
+
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+
+ExecStart=/bin/bash -c '\
+  /usr/bin/docker run \
+    --name=%p \
+    -p 5042:5000 \
+    -v /srv/data/registry/:/var/lib/registry/ \
+    -v /etc/serverconf/registry/:/etc/serverconf/registry/ \
+    -v /etc/letsencrypt/:/etc/letsencrypt/ \
+    -e "REGISTRY_HTTP_TLS_CERTIFICATE=/etc/letsencrypt/live/registry.eztwo.com/fullchain.pem" \
+    -e "REGISTRY_HTTP_TLS_KEY=/etc/letsencrypt/live/registry.eztwo.com/privkey.pem" \
+    -e "REGISTRY_AUTH=htpasswd" \
+    -e "REGISTRY_AUTH_HTPASSWD_REALM=eztwo docker registry" \
+    -e "REGISTRY_AUTH_HTPASSWD_PATH=/etc/serverconf/registry/htpasswd" \
+    registry:2 \
+    '
+
+ExecStop=/usr/bin/docker stop %p
+
+Restart=on-failure
+RestartSec=5s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multiuser.target
+

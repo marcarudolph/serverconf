@@ -1,0 +1,33 @@
+[Unit]
+Description=kibana
+
+After=docker.service
+Requires=docker.service 
+
+
+[Service]
+TimeoutStartSec=0
+
+ExecStartPre=-/usr/bin/docker kill %p
+ExecStartPre=-/usr/bin/docker rm %p
+
+ExecStart=/bin/bash -c '\
+  /usr/bin/docker run \
+    -p 5601:5601 \
+    --name=kibana \
+    --add-host="es:$(contnet ip es)" \
+    -e ELASTICSEARCH_URL=http://es:9242 \
+    kibana:4.1
+  '
+
+ExecStartPost=/usr/bin/contnet attach %p 192.168.42.98/24 42-BE-EF-42-00-98
+
+ExecStop=/usr/bin/docker stop %p
+
+Restart=on-failure
+RestartSec=5s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multiuser.target
